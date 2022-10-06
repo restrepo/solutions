@@ -11,8 +11,21 @@ else:
 print(df.shape)
 print(df.columns)
 def get_hidden_sector(l):
-  return []
+    
+    com = list(itertools.combinations_with_replacement(l,2))
+    suma = set([abs(sum(i)) for i in com])
+    
+    final = []
 
+    for s in suma:
+        cond = [i for i in com if abs(sum(i))==s]
+        aplanar = set([item for sublist in cond for item in sublist])
+        resta = set(l).difference(aplanar)
+    
+        if not resta:
+            final.append({'S':s, 'ψ':cond})
+        
+    return final
 
 df['hidden']=df['solution'].apply(get_hidden_sector)
 
