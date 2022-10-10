@@ -1,5 +1,7 @@
+import itertools as itertools
 import pandas as pd
 import os
+
 if not os.path.exists('solutions.json'):
     print('remote loading')
     df=pd.read_json('https://zenodo.org/record/5526707/files/solutions.json?download=1')
@@ -10,6 +12,7 @@ else:
 
 print(df.shape)
 print(df.columns)
+
 def get_hidden_sector(l):
     
     com = list(itertools.combinations_with_replacement(l,2))
