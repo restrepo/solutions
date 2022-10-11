@@ -15,6 +15,7 @@ else:
 print(df.shape)
 print(df.columns)
 
+df=df[:10000]
 
 def get_hidden_sector(input_list):
 
@@ -50,17 +51,20 @@ def get_hidden_sector(input_list):
                 pares_finales += [{"S": s, "ψ": pares_dummy}]
 
     if len(pares_finales) == 0:
-        pares_finales += [{"S": [], "ψ": []}]
+        pares_finales += []
 
     return pares_finales
 
 
 assert get_hidden_sector([2, -3, 4, -5, 11])[0].get("S") == 6
 assert get_hidden_sector([2, 2, -3, 4, 4, -5, 11])[0].get("S") == 6
-assert get_hidden_sector([2, 2, -3, 4, -5, 11])[0].get("S") == []
+assert get_hidden_sector([2, 2, -3, 4, -5, 11]) == []
 
 
 df["hidden"] = df["solution"].apply(get_hidden_sector)
 
 print("*" * 20)
-print(df.iloc[0].to_dict())
+#print(df.iloc[0].to_dict())
+df2=df[df['hidden'].apply(len)>0].reset_index(drop=True)
+print(df2)
+print(df2.shape)

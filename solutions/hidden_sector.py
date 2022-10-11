@@ -14,7 +14,7 @@ else:
 
 print(df.shape)
 print(df.columns)
-
+df=df[:10000]
 
 def get_hidden_sector(l):
 
@@ -79,4 +79,7 @@ def get_hidden_sector(l):
 df["hidden"] = df["solution"].apply(get_hidden_sector)
 
 print("*" * 20)
-print(df.iloc[0].to_dict())
+#print(df.iloc[0].to_dict())
+df2=df[df['hidden'].apply(len)>0].reset_index(drop=True)
+print(df2)
+print(df2.shape)
