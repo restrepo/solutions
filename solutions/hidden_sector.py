@@ -29,7 +29,7 @@ def get_hidden_sector(l):
         resta = set(l).difference(set(aplanar))
 
         if not resta:
-            l_ = l
+            l_ = l.copy()
             cond_ = cond
             N = len(l)
 
