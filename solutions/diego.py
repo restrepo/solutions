@@ -30,7 +30,8 @@ def get_hidden_sector(l):
 assert get_hidden_sector([2, -3, 4, -5, 11])[0].get("S") == 6
 assert get_hidden_sector([2, 2, -3, 4, 4, -5, 11])[0].get("S") == 6
 assert get_hidden_sector([2, 2, -3, 4, -5, 11]) == []
-  
+# Ana test
+assert get_hidden_sector([2, -3, -4, 5, -6, 7, 7, -8])[0].get("S") == 1   
   
   
 df['hidden']=df['solution'].apply(get_hidden_sector)
