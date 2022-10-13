@@ -18,7 +18,6 @@ print(df.columns)
 def get_hidden_sector(l):
     
     com = list(itertools.combinations_with_replacement(l,2))
-
     com_index = np.array(list(itertools.combinations_with_replacement(range(len(l)),2)))
 
     suma = set([abs(sum(i)) for i in com])
