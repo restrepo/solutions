@@ -85,9 +85,9 @@ def get_hidden_sector(qin):
 
 
 # pruebas del hidden sector
-assert get_hidden_sector([1, 2, -3, 4, 5])[0].get("S") == 6
-assert get_hidden_sector([1, 2, -3, -3, 4, 5])[0].get("S") == 6
-assert get_hidden_sector([1, 1, 2, -3, -3, 4, 5, 5])[0].get("S") == 6
+assert get_hidden_sector([1, 2, -3, 4, 5]).get("S") == 6
+assert get_hidden_sector([1, 2, -3, -3, 4, 5]).get("S") == 6
+assert get_hidden_sector([1, 1, 2, -3, -3, 4, 5, 5]).get("S") == 6
 assert get_hidden_sector([1, 2, -3, 4, 5, 9, 9]) == []
 assert get_hidden_sector([1, 1, 2, -3, 4, 5]) == []
 assert get_hidden_sector([1, 1, 2, -3, 4, 5]) == []
@@ -96,10 +96,10 @@ assert get_hidden_sector([1, 2, -3, 4, 5, 8]) == []
 assert get_hidden_sector([1, 2, -3, 4, 5, 8, 8]) == []
 assert get_hidden_sector([]) == []
 assert get_hidden_sector([1, 1, 1, 1, 1, -2, -2, -2, -2, 3]) == []
-assert get_hidden_sector([1, 2, 2, 2, -3, -5, -6, 7])[0].get("S") == 4
-assert get_hidden_sector([1, 2, 2, 4, -5, -5, -7, 8])[0].get("S") == 3
+assert get_hidden_sector([1, 2, 2, 2, -3, -5, -6, 7]).get("S") == 4
+assert get_hidden_sector([1, 2, 2, 4, -5, -5, -7, 8]).get("S") == 3
 # Ana test
-assert get_hidden_sector([2, -3, -4, 5, -6, 7, 7, -8])[0].get("S") == 1
+assert get_hidden_sector([2, -3, -4, 5, -6, 7, 7, -8]).get("S") == 1
 assert (
     get_hidden_sector([3, 5, -8, 9, -10, -14, 15]) == []
 )  # Dirac triplet [-10,5,15] (s=5)
