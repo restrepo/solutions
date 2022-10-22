@@ -1,0 +1,90 @@
+import numpy as np
+import pandas as pd
+import itertools
+import random
+df=pd.read_json('https://zenodo.org/record/5526707/files/solutions.json?download=1')
+
+import random
+from multiprocessing import Pool
+import itertools
+import time
+from itertools import permutations
+
+resultados = Pool().map(funcion_L, l)
+df=pd.DataFrame(resultados)
+df=df.T
+df=df.astype(str)
+df=df.drop_duplicates().reset_index(drop=True)
+df
+
+def funcion_L(l):
+   caja=[]
+   com=list(itertools.combinations(l,2))
+   Dd=list((i,i) for i in l)
+   L=com+Dd
+   par=int(len(l)/2)
+   impar=int((len(l)+1)/2)
+   
+   if len(l) %2 == 0:
+
+      flatten_2=list(itertools.combinations(L,par))
+      #conv=list(map(list,flatten_2))
+      #conv
+   else:
+      flatten_2=list(itertools.combinations(L,impar))
+      
+   for item in flatten_2:
+
+     for x in item:
+
+      conv=list(map(list, item))
+      caja.append({'sol':conv})
+      caja2=pd.DataFrame(caja)
+      caja2['ssol']=caja2['sol'].astype(str)
+      caja2=caja2.drop_duplicates('ssol').reset_index(drop=True).drop('ssol',axis='columns')
+      #caja2=caja2.to_dict()
+      caja2=[caja2]
+  
+   return caja
+   
+df['prueba']=df['solution'][:10].apply(funcion_L)
+#df=df[df['hidden'].apply(len)>0].reset_index(drop=True)#aplica len al dataframe.
+df1=df[0:10]
+df1
+
+def cleaner1(l,m): #l es solution y m es prueba del df
+  l1=l
+  sol=[abs(sum(p)) for p in m]
+  if sol.count(sol[0])==len(sol): #cuenta el numero de veces
+
+    flatten=[item for sublist in  m for item in sublist]
+    dif=[element for element in l1 if element not in flatten]# coloca los numeros que estan en l1 pero no en flatten 
+    if dif: #si hay diferencia entonces escriba mis solucion final
+
+      if set(l1).difference(set(dif))!=0: #si hay diferencia entonces escriba mis solucion final 
+              #print(dif,sol,flatten,1)
+              #return {1} 
+        return {'s':sol[0],'ψ':m}
+       
+      else:
+        return {}
+   
+    if not dif: #si no hay diferencia entonces retorne el diccionario con soluciones
+                #print(dif,sol,flatten,"*2")         
+           
+            #for i in l1:
+
+        count1=[i for i in l1 if l1.count(i)==2] #elementos de l1  DOS VECES
+
+        count2=[j for j in m if m.count(j)==1]  #elementos de m repetidos, donde m son la lista de tuplas que ingresan a get_pairs#
+        if not count1: #si count1 no tiene elementos repetidos entonces retorne diccionario
+            return {'s':sol[0],'ψ':m}
+        else:
+          if not count2: #verifique que count2 no tenga elementos repetidos
+              return {'s':sol[0],'ψ':m}
+          else: #m tiene elementos repetidos
+              return {}
+         
+  else:
+
+    return {}
