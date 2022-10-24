@@ -1,0 +1,105 @@
+import numpy as np
+import pandas as pd
+import itertools
+import random
+import itertools
+from itertools import permutations
+
+def get_hidden_sector(l): #generar todas las parejas posibles dada una lista del DF('solution) #IDEA longitud de las listas se igual a lo que sumen las parejas
+   parejas=[]
+   com=list(itertools.combinations(l,2))
+   Dd=list((i,i) for i in l)
+   L=com+Dd
+   par=int(len(l)/2)
+   impar=int((len(l)+1)/2)
+   
+   if len(l) %2 == 0:
+
+      flatten_2=list(itertools.combinations(L,par))
+      #conv=list(map(list,flatten_2))
+      #conv
+   else:
+      flatten_2=list(itertools.combinations(L,impar))
+      
+   for item in flatten_2:
+
+     for x in item:
+
+      conv=list(map(list, item))
+      sol=[abs(sum(p)) for p in conv]
+      if sol==[]:
+        return {}
+      else:
+        if sol.count(sol[0])==len(sol):
+          flatten=[item for sublist in  conv for item in sublist]
+          dif=[element for element in l if element not in flatten]# coloca los numeros que estan en l pero no en flatten
+          #parejas.append(conv)
+          if dif: #si hay diferencia entonces escriba mis solucion final l= [2, 2, 3, -8, -12, 13]// flatten= [[2, 2], [2, 2], [2, 2]]
+                                                 # dif=[3,-8,-12,13]
+                                                # [1,2,-3,4,5,8], [1,5],[2,4],[-3,-3]
+            count1=[i for i in l if l.count(i)==2] #elementos de l  DOS VECES ;[{}; ([2,-3,-4,5,-6,7,7,-8],[[2,-3],[-4,5],[-6,7],[7,-8]])
+            count2=[j for j in conv if conv.count(j)==1]  #elementos de m NO repetidos, donde m son la lista de tuplas que ingresan a get_pairs# 
+            if set(l).difference(set(dif))!=0: #si hay diferencia entonces escriba mis solucion final 
+              if len(count1)==1 and  len(count2)==0:
+                return {4}
+              else:
+                #if len(count1)==0 and len(count2)==0
+               # [i for i in l if ] 
+                if len(dif)!=0:
+                    pass
+                else:
+                    parejas.append(7)#{'S':sol[0],'ψ':conv})#[1,2,-3,4,5][[1,5],[2,4],[-3,-3]]
+          if not dif: #si no hay diferencia entonces retorne el diccionario con soluciones
+            count1=[i for i in l if l.count(i)==2] #elementos de l1  DOS VECES ;[{}; ([2,-3,-4,5,-6,7,7,-8],[[2,-3],[-4,5],[-6,7],[7,-8]])
+            count2=[j for j in conv if conv.count(j)==1]  #elementos de m repetidos, donde m son la lista de tuplas que ingresan a get_pairs#   
+            
+            if  len(count1)==0: #si count1 no tiene elementos repetidos entonces retorne diccionario
+                  if len(dif)==0:
+                    if len(count2)>1:
+                        parejas.append({'S':sol[0],'ψ':conv})#get_hidden_sector([1,2,-3,4,5])#s=6
+                    else:
+                       if len(count2)==1:
+                          parejas.append({'S':sol[0],'ψ':conv})
+                       else:
+                          return {}#[1, 1, 1, 1, 1, -2, -2, -2, -2, 3]
+                
+            else:
+              
+              if len(count2)==4:
+                   parejas.append({'S':sol[0],'ψ':conv})
+
+              else:
+                if len(dif)==0:
+                  if len(count1)>2:
+                    parejas.append({'S':sol[0],'ψ':conv})#get_hidden_sector([1,1,2,-3,-3,4,5,5])#s=6 [1,1,2,-3,-3,4,5]problema
+                  else:
+                    if len(count1)==2:
+                       parejas.append({'S':sol[0],'ψ':conv})
+                    else:
+                     return {2}#get_hidden_sector([1,2,-3,4,5,9,9])(vacio)
+
+                else:
+                  return {1}   
+                
+              
+             
+                
+   return parejas
+
+assert get_hidden_sector([1,2,-3,4,5])[0].get('S')==6#ok
+assert get_hidden_sector([1,2,-3,-3,4,5])[0].get('S')==6# ok
+assert get_hidden_sector([1,1,2,-3,-3,4,5,5])[0].get('S')==6# ok 
+assert get_hidden_sector([1,2,-3,4,5,9,9])==[]#ok
+assert get_hidden_sector([1,1,2,-3,4,5])==[]#ok
+assert get_hidden_sector([1,2,-3,4,5,8])==[]ok
+assert get_hidden_sector([1,2,-3,4,5,8,8])==[]ok
+assert get_hidden_sector([])==[]#ok
+assert get_hidden_sector([1, 1, 1, 1, 1, -2, -2, -2, -2, 3])==[]ok
+assert get_hidden_sector([1, 2, 2, 2, -3, -5, -6, 7])[0].get('S')==4ok
+assert get_hidden_sector( [1, 2, 2, 4, -5, -5, -7, 8] )[0].get('S')==3ok
+assert get_hidden_sector([2, -3, -4, 5, -6, 7, 7, -8])[0].get('S')==1 # Ana test ok
+assert get_hidden_sector([3, 5, -8, 9, -10, -14, 15])==[] # Dirac triplet [-10,5,15] (s=5) importante preguntar al profe 
+assert get_hidden_sector([3, 5, -8, 9, -10, -14, 15, 20,-30, 35])==[]ok
+assert get_hidden_sector([1, 3, 3, 3, -5, -7, -7, 9])[0].get('S')==4 #order of pairs matters ok
+assert get_hidden_sector([7, -8, -10, 11, -12, 13, 14, -15])[0].get('S')==1 #double intersection pair ok
+assert get_hidden_sector([4,-12])[0].get('S')==8
