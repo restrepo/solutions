@@ -14,64 +14,122 @@ else:
 
 print(df.shape)
 print(df.columns)
-df=df[:10000]
+
+def split_pairs(pairs):
+    
+    equal = [pair for pair in pairs if pair[0]==pair[1]]
+    diff = [pair for pair in pairs if pair[0]!=pair[1]]
+
+    return equal, diff
+
+def remove_intersection(pairs):
+    pairs_cp = pairs.copy()
+    for pair_1 in pairs_cp:
+        subpairs = pairs.copy()
+        subpairs.remove(pair_1)
+        inters = []
+        for pair_2 in subpairs:
+            if set(pair_1).intersection(pair_2):
+                s = set(pair_1).intersection(pair_2)
+                for x in s:
+                    inters.append(x)
+        inters = tuple(sorted(list(set(inters))))
+        if len(inters)==2:
+            try:
+              ind = pairs_cp.index(inters)
+              ON = True
+            except:
+              ON = False
+            if ON:
+               pairs_cp.pop(ind)
+    return pairs_cp
+
+def filter_set_pairs(pairs, l):
+
+    N = len(l)
+    l_ = l.copy()
+    
+    equal, diff = split_pairs(pairs)
+
+    for pair in diff:
+        ind = []
+        try:
+            for val in pair:
+                ind.append(l_.index(val))
+        except:
+            pass
+
+        if len(ind)==2:
+            for ind_ in ind:
+                l_[ind_] = 0
+            N = N - 2
+    
+        #print(N, l_, pair)
+
+    for pair in equal:
+        ind = []
+        for val in pair:
+            try:
+                ind.append(l_.index(val))
+                l_[l_.index(val)] = 0
+            except:
+                pass
+        
+        if len(set(ind)) == 1:
+            N = N - 1
+        elif len(set(ind)) == 2:
+            N = N - 2
+
+        #print(N, l_, pair)
+
+    if N==0 and sum(l_)==0:
+        return True
+    else:
+        return False
 
 def get_hidden_sector(l):
-
-    com = list(itertools.combinations_with_replacement(l, 2))
-    suma = set([abs(sum(i)) for i in com])
-
+    
+    combs = list(itertools.combinations_with_replacement(l,2))
+    sums = set([abs(sum(i)) for i in combs])
+    
     final = []
 
-    for s in suma:
-        cond = [i for i in com if abs(sum(i)) == s]
-        aplanar = [item for sublist in cond for item in sublist]
-        resta = set(l).difference(set(aplanar))
-
+    for s in sums:
+        pairs = [i for i in combs if abs(sum(i))==s]
+        flatten = set([item for sublist in pairs for item in sublist])
+        resta = set(l).difference(flatten)
+    
         if not resta:
-            l_ = l.copy()
-            cond_ = cond
-            N = len(l)
 
-            combs = []
+            FINISH = False
 
-            equal = [par for par in cond_ if par[0] == par[1]]
-            ind_eq = [cond.index(eq) for eq in equal]
-            
-            for ind in ind_eq:
-                cond_.pop(ind)
+            for DO_INTERSECTION in [True, False]:
+                
+                if DO_INTERSECTION:
+                    pairs_ = remove_intersection(pairs)
+                else:
+                    pairs_ = pairs.copy()
 
-            for par in cond_:
-                try:
-                    for val in par:
-                        l_[l_.index(val)] = 0
-                    N = N - 2
-                    combs.append(par)
-                except:
-                    pass
-                    # print("Discharge pair", par)
-            
-            for par in equal:
-                ind = []
-                for val in par:
-                    try:
-                        ind.append(l_.index(val))
-                    except:
-                        pass
-                for ind_ in ind:
-                    l_[ind_] = 0
+                ON = True
 
-                if len(set(ind)) == 1:
-                    N = N - 1
-                elif len(set(ind)) != 1:
-                    N = N - len(set(ind))
+                perms = list(itertools.permutations(pairs_))[:1]
 
-                combs.append(par)
+                i = 0
+                while i<len(perms):
 
-            if N == 0:
-                final.append({"S": s, "ψ": combs})
+                    VALID = filter_set_pairs(list(perms[i]), l)
 
-            del l_, cond_
+                    if VALID:
+                        final_pairs = list(set(pairs))
+                        final.append({'S':s, 'ψ':final_pairs})
+                        i = len(perms)
+                        FINISH = True
+                        break
+                    else:
+                      i=i+1
+                
+                if FINISH:
+                    break
 
     return final
 
